@@ -1,0 +1,83 @@
+.liquidity-chart-panel {
+  border: 1px solid #2e2e2e;
+  background:
+    radial-gradient(320px 120px at 8% -10%, #5affaf20, transparent 70%),
+    linear-gradient(180deg, #111111 0%, #0d0d0d 100%);
+  border-radius: 18px;
+  box-shadow: 0 16px 34px #00000045;
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.liquidity-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.liquidity-chart-header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.liquidity-chart-header p {
+  margin: 2px 0 0;
+  color: #a8a8a8;
+  font-size: 0.88rem;
+}
+
+.liquidity-chart-range-selector {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.liquidity-chart-range-button {
+  border: 1px solid #434343;
+  background: #151515;
+  color: #ececec;
+  border-radius: 9px;
+  padding: 6px 9px;
+  font-size: 0.77rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.liquidity-chart-range-button.active {
+  border-color: #efffef;
+  background: #f2f2f2;
+  color: #101010;
+}
+
+.liquidity-chart-body {
+  flex: 1;
+  min-height: 0;
+  margin-top: 12px;
+}
+
+.liquidity-chart-placeholder {
+  margin: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a8a8a8;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .liquidity-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .liquidity-chart-range-selector {
+    justify-content: flex-start;
+  }
+}

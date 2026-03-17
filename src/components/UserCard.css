@@ -1,0 +1,61 @@
+.user-card {
+  position: relative;
+  width: min(320px, calc(100vw - 32px));
+  border: 1px solid #2a2a2a;
+  background: #101010;
+  color: #f2f2f2;
+  border-radius: 16px;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+  box-shadow: 0 14px 30px #0000004d;
+}
+
+.settings-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 1px solid #3b3b3b;
+  background: #151515;
+  color: #d8d8d8;
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid #3b3b3b;
+}
+
+.user-meta {
+  display: grid;
+  gap: 2px;
+}
+
+.user-label {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #b5b5b5;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.user-name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.logout-button {
+  border: 1px solid #3a3a3a;
+  background: #f0f0f0;
+  color: #161616;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}

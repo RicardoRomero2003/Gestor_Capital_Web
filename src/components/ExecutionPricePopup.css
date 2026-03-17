@@ -1,0 +1,65 @@
+.execution-price-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: #00000088;
+  display: grid;
+  place-items: center;
+  z-index: 90;
+  padding: 14px;
+}
+
+.execution-price-popup {
+  width: min(420px, 100%);
+  border: 1px solid #2d2d2d;
+  border-radius: 12px;
+  background: #111111;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.execution-price-popup h4 {
+  margin: 0;
+  color: #f0f0f0;
+  font-size: 1.05rem;
+}
+
+.execution-price-popup p {
+  margin: 0;
+  color: #bdbdbd;
+  font-size: 0.88rem;
+}
+
+.execution-price-popup label {
+  color: #d8d8d8;
+  font-size: 0.82rem;
+}
+
+.execution-price-popup input,
+.execution-price-popup button {
+  border: 1px solid #323232;
+  background: #0e0e0e;
+  color: #f1f1f1;
+  border-radius: 9px;
+  min-height: 40px;
+  padding: 8px 10px;
+  font-size: 0.88rem;
+}
+
+.execution-price-popup button {
+  border-color: #ececec;
+  background: #ececec;
+  color: #111111;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.execution-price-popup button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.execution-price-popup-error {
+  color: #f4b4b4;
+  font-size: 0.84rem;
+}

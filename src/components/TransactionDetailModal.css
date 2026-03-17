@@ -1,0 +1,142 @@
+.transaction-detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0000008a;
+  display: grid;
+  place-items: center;
+  z-index: 40;
+  padding: 16px;
+}
+
+.transaction-detail-modal {
+  width: min(700px, 100%);
+  max-height: 84vh;
+  border: 1px solid #3a3a3a;
+  border-radius: 16px;
+  background: #121212;
+  box-shadow: 0 22px 50px #00000085;
+  position: relative;
+  padding: 20px 18px 16px;
+  overflow: auto;
+}
+
+.transaction-detail-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: 1px solid #f2f2f2;
+  background: #0f0f0f;
+  color: #f2f2f2;
+  border-radius: 9px;
+  padding: 6px 10px;
+  min-width: 36px;
+  line-height: 1;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.transaction-detail-delete {
+  position: absolute;
+  top: 12px;
+  right: 60px;
+  border: 1px solid #ff8f8f;
+  background: #2a1010;
+  color: #ffd5d5;
+  border-radius: 9px;
+  padding: 7px 10px;
+  line-height: 1;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.transaction-detail-delete:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.transaction-detail-header {
+  margin-bottom: 14px;
+}
+
+.transaction-detail-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.transaction-detail-header h2.income {
+  color: #67dd89;
+}
+
+.transaction-detail-header h2.expense {
+  color: #ff8585;
+}
+
+.transaction-detail-header h2.transfer {
+  color: #75b7ff;
+}
+
+.transaction-detail-error {
+  margin: 0 0 10px;
+  color: #f7b8b8;
+  font-size: 0.88rem;
+}
+
+.transaction-detail-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.transaction-detail-item {
+  border: 1px solid #2d2d2d;
+  border-radius: 10px;
+  background: #101010;
+  padding: 10px 11px;
+}
+
+.transaction-detail-item.income {
+  border: 1px solid #1f4a2f;
+  background: #112418;
+}
+
+.transaction-detail-item.expense {
+  border: 1px solid #4a1f1f;
+  background: #291313;
+}
+
+.transaction-detail-item.transfer {
+  border: 1px solid #1c3f66;
+  background: #102032;
+}
+
+.transaction-detail-label {
+  margin: 0;
+  color: #afafaf;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.transaction-detail-value {
+  margin: 6px 0 0;
+  color: #efefef;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.transaction-detail-item.income .transaction-detail-value {
+  color: #67dd89;
+  font-weight: 700;
+}
+
+.transaction-detail-item.expense .transaction-detail-value {
+  color: #ff8585;
+  font-weight: 700;
+}
+
+.transaction-detail-item.transfer .transaction-detail-value {
+  color: #75b7ff;
+  font-weight: 700;
+}

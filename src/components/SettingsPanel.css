@@ -1,0 +1,273 @@
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0000008a;
+  display: grid;
+  place-items: center;
+  z-index: 20;
+}
+
+.settings-panel {
+  width: 80vw;
+  height: 80vh;
+  border: 1px solid #3a3a3a;
+  border-radius: 16px;
+  background: #121212;
+  box-shadow: 0 22px 50px #00000085;
+  position: relative;
+  padding: 22px 18px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-title {
+  margin: 0 56px 16px 4px;
+  font-size: 1.2rem;
+  color: #f0f0f0;
+}
+
+.settings-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(180px, 20%) 1fr;
+  min-height: 0;
+}
+
+.settings-menu {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 6px 14px 6px 4px;
+  border-right: 1px solid #2f2f2f;
+}
+
+.settings-menu-item {
+  text-align: left;
+  border: 1px solid #2f2f2f;
+  background: #171717;
+  color: #d7d7d7;
+  border-radius: 9px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.settings-menu-item.active {
+  border-color: #f0f0f0;
+  color: #f0f0f0;
+}
+
+.settings-content {
+  min-height: 0;
+  margin-left: 14px;
+  border-radius: 12px;
+  background: #141414;
+  padding: 14px;
+  overflow: auto;
+}
+
+.settings-footer {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.settings-error {
+  margin: 0 auto 0 0;
+  color: #f4b4b4;
+  font-size: 0.88rem;
+}
+
+.settings-save-button {
+  border: 1px solid #f0f0f0;
+  background: #111111;
+  color: #f0f0f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.settings-save-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.settings-section {
+  display: grid;
+  gap: 12px;
+  max-width: 560px;
+}
+
+.settings-section h3 {
+  margin: 0;
+  font-size: 1.06rem;
+  color: #f1f1f1;
+}
+
+.settings-section p {
+  margin: 0;
+  color: #b5b5b5;
+  font-size: 0.92rem;
+}
+
+.settings-section label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: #dadada;
+}
+
+.settings-section input,
+.settings-section select {
+  border: 1px solid #313131;
+  background: #0f0f0f;
+  color: #f3f3f3;
+  border-radius: 10px;
+  padding: 10px 11px;
+  font-size: 0.92rem;
+}
+
+.settings-secondary-btn {
+  justify-self: start;
+  border: 1px solid #f0f0f0;
+  background: #111111;
+  color: #f0f0f0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.salary-block {
+  display: grid;
+  gap: 8px;
+}
+
+.salary-title {
+  margin: 2px 0 0;
+  color: #dddddd;
+  font-size: 0.9rem;
+}
+
+.salary-input-row {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) minmax(84px, 120px) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.salary-input-row .settings-secondary-btn {
+  justify-self: auto;
+}
+
+.salary-list {
+  margin: 4px 0 0;
+  padding-left: 0;
+  color: #ececec;
+  display: grid;
+  gap: 4px;
+  list-style: none;
+}
+
+.salary-item {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) minmax(80px, 120px) auto;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #2b2b2b;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #111111;
+}
+
+.salary-empty {
+  margin: 2px 0 0;
+  color: #9f9f9f;
+  font-size: 0.88rem;
+}
+
+.salary-remove-button {
+  border: 1px solid #f2f2f2;
+  background: #0f0f0f;
+  color: #f2f2f2;
+  border-radius: 6px;
+  min-width: 26px;
+  height: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.financial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.financial-grid label {
+  min-width: 0;
+}
+
+.financial-grid input {
+  width: 100%;
+  min-width: 0;
+}
+
+.settings-close-button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  border: 1px solid #f2f2f2;
+  background: #0f0f0f;
+  color: #f2f2f2;
+  border-radius: 9px;
+  padding: 6px 10px;
+  min-width: 36px;
+  line-height: 1;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .settings-panel {
+    width: 92vw;
+    height: 80vh;
+    padding: 14px 12px 12px;
+  }
+
+  .settings-title {
+    margin-bottom: 12px;
+  }
+
+  .settings-body {
+    grid-template-columns: minmax(120px, 32%) 1fr;
+  }
+
+  .settings-menu {
+    padding-right: 10px;
+  }
+
+  .settings-menu-item {
+    font-size: 0.82rem;
+    padding: 8px 10px;
+  }
+
+  .settings-content {
+    margin-left: 10px;
+    padding: 10px;
+  }
+
+  .financial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .salary-input-row {
+    grid-template-columns: 1fr;
+  }
+
+  .salary-item {
+    grid-template-columns: 1fr;
+  }
+}

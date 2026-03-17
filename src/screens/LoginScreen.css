@@ -1,0 +1,188 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.login-page {
+  --bg: #f3f3f3;
+  --bg-gradient: radial-gradient(circle at 18% 10%, #ffffff 0%, transparent 45%);
+  --panel: #ffffff;
+  --text: #101010;
+  --muted: #555555;
+  --line: #d0d0d0;
+  --input-bg: #ffffff;
+  --button-bg: #111111;
+  --button-text: #f7f7f7;
+  --button-border: #111111;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg);
+  background-image:
+    var(--bg-gradient),
+    linear-gradient(135deg, #fafafa 0%, #ececec 100%);
+  color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.login-page.dark {
+  --bg: #0f0f0f;
+  --bg-gradient: radial-gradient(circle at 86% 14%, #353535 0%, transparent 50%);
+  --panel: #161616;
+  --text: #f2f2f2;
+  --muted: #bdbdbd;
+  --line: #383838;
+  --input-bg: #101010;
+  --button-bg: #f4f4f4;
+  --button-text: #111111;
+  --button-border: #f4f4f4;
+}
+
+.login-shell {
+  width: min(460px, 100%);
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 24px;
+  box-shadow: 0 15px 60px #00000022;
+}
+
+.login-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.login-header h1 {
+  margin: 0;
+  margin-top: 4px;
+  font-size: clamp(1.45rem, 3.3vw, 1.9rem);
+}
+
+.mode-toggle {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.login-form {
+  display: grid;
+  gap: 10px;
+}
+
+.login-form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--input-bg);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 12px 13px;
+  font-size: 0.96rem;
+}
+
+.login-form input:focus-visible,
+.mode-toggle:focus-visible,
+.login-button:focus-visible,
+.text-button:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.login-actions {
+  margin-top: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.text-button {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.88rem;
+}
+
+.login-button {
+  margin-top: 6px;
+  border: 1px solid var(--button-border);
+  background: var(--button-bg);
+  color: var(--button-text);
+  border-radius: 11px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.015em;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+.login-button:disabled {
+  opacity: 0.68;
+  cursor: not-allowed;
+}
+
+.status-text {
+  min-height: 20px;
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.status-text.success {
+  color: var(--text);
+}
+
+.status-text.error {
+  color: #b30000;
+}
+
+.login-page.dark .status-text.error {
+  color: #ffb0b0;
+}
+
+@media (max-width: 520px) {
+  .login-shell {
+    padding: 18px;
+  }
+
+  .login-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
