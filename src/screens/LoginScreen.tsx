@@ -92,10 +92,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
         transition={{ duration: 0.45 }}
       >
         <header className="login-header">
-          <div>
-            <p className="eyebrow">Gestor de Capital</p>
-            <h1>Iniciar sesion</h1>
-          </div>
+          <img className="login-logo" src="/assets/capify-logo.png" alt="Capify" />
         </header>
 
         <form className="login-form" onSubmit={onSubmit}>
