@@ -19,6 +19,7 @@ type LoginHint = {
 };
 
 export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
+  const [isMobileLayout, setIsMobileLayout] = useState(() => detectMobileLayout());
   const [theme] = useState<Theme>(getInitialTheme);
   const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
@@ -27,6 +28,12 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   const [statusKind, setStatusKind] = useState<StatusKind>("idle");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+
+  useEffect(() => {
+    const onResize = () => setIsMobileLayout(detectMobileLayout());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     try {
@@ -84,7 +91,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   };
 
   return (
-    <main className={`login-page ${theme}`}>
+    <main className={`login-page ${theme}${isMobileLayout ? " mobile-layout" : ""}`}>
       <motion.section
         className="login-shell"
         initial={{ opacity: 0, y: 16 }}
@@ -171,4 +178,12 @@ function getDisplayNameFromIdentifier(identifier: string): string {
     return "Usuario";
   }
   return raw.charAt(0).toUpperCase() + raw.slice(1);
+}
+
+function detectMobileLayout(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+  const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  return window.innerWidth <= 900 || (coarsePointer && window.innerWidth <= 1024);
 }

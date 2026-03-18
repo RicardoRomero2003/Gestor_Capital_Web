@@ -28,6 +28,10 @@ body.home-no-scroll {
   overflow: hidden;
 }
 
+.mobile-top-bar {
+  display: none;
+}
+
 .capital-cards {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -134,29 +138,134 @@ body.home-no-scroll {
   height: calc(var(--left-history-height) - var(--left-history-top-gap));
 }
 
-@media (max-width: 640px) {
-  .home-screen {
+.home-screen.mobile-layout {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: calc(env(safe-area-inset-top) + 10px) 14px calc(env(safe-area-inset-bottom) + 18px);
+  gap: 10px;
+}
+
+.home-screen.mobile-layout .mobile-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.home-screen.mobile-layout .mobile-top-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.home-screen.mobile-layout .capital-cards {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.home-screen.mobile-layout .capital-card {
+  padding: 12px;
+  border-radius: 14px;
+  box-shadow: none;
+}
+
+.home-screen.mobile-layout .capital-card p {
+  font-size: 0.81rem;
+}
+
+.home-screen.mobile-layout .capital-card strong {
+  font-size: 1.65rem;
+}
+
+.home-screen.mobile-layout .capital-card-placeholder {
+  display: none;
+}
+
+.home-screen.mobile-layout .new-expense-anchor {
+  margin: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-height: 46px;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+  position: relative;
+  z-index: 4;
+}
+
+.home-screen.mobile-layout .new-expense-anchor::-webkit-scrollbar {
+  display: none;
+}
+
+.home-screen.mobile-layout .new-income-button,
+.home-screen.mobile-layout .new-expense-button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  min-width: 132px;
+  border: 1px solid #f4f4f4;
+  background: #f4f4f4;
+  color: #111111;
+  -webkit-text-fill-color: #111111;
+  font-weight: 800;
+  line-height: 1.15;
+  white-space: nowrap;
+  text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.home-screen.mobile-layout .liquidity-chart-anchor {
+  margin: 8px 0 0;
+  width: 100%;
+  flex: 0 0 auto;
+  min-height: 320px;
+  position: relative;
+  z-index: 1;
+}
+
+.home-screen.mobile-layout .transactions-anchor {
+  position: static;
+  width: 100%;
+  height: min(52vh, 460px);
+  min-height: 360px;
+}
+
+.home-screen.mobile-layout .transactions-panel {
+  height: 100%;
+}
+
+@media (max-width: 900px) {
+  .home-screen:not(.mobile-layout) {
     --left-floating-width: min(320px, calc(100vw - 32px));
     --left-history-height: 270px;
     padding: 20px 16px 16px;
   }
 
-  .capital-cards {
+  .home-screen:not(.mobile-layout) .capital-cards {
     grid-template-columns: 1fr;
   }
 
-  .liquidity-chart-anchor {
+  .home-screen:not(.mobile-layout) .liquidity-chart-anchor {
     margin: 0;
     width: 100%;
     min-height: 160px;
   }
 
-  .user-card-anchor {
+  .home-screen:not(.mobile-layout) .user-card-anchor {
     left: 16px;
     bottom: 16px;
   }
 
-  .transactions-anchor {
+  .home-screen:not(.mobile-layout) .transactions-anchor {
     left: 16px;
     bottom: calc(16px + var(--left-usercard-height) + var(--left-floating-gap));
   }

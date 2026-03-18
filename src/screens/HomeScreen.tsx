@@ -33,6 +33,7 @@ import { NewTransactionModal } from "../components/NewTransactionModal";
 import { TransactionDetailModal } from "../components/TransactionDetailModal";
 import { TransactionHistoryPanel } from "../components/TransactionHistoryPanel";
 import { UserCard } from "../components/UserCard";
+import { UserMenuButtonWeb } from "../components/UserMenuButtonWeb";
 import {
   buildFinancialUpsertPayload,
   createDefaultFinancialSettingsDraft,
@@ -63,6 +64,7 @@ const CAPITAL_FILTER_LABELS: Record<FinancialCapitalKey, string> = {
 };
 
 export function HomeScreen({ user, onLogout }: HomeScreenProps) {
+  const [isMobileLayout, setIsMobileLayout] = useState(() => detectMobileLayout());
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [savedSettings, setSavedSettings] = useState<SettingsDraft>(() =>
     createInitialSettingsDraft(user, createDefaultFinancialSettingsDraft()),
@@ -82,12 +84,18 @@ export function HomeScreen({ user, onLogout }: HomeScreenProps) {
   const [mutationTick, setMutationTick] = useState(0);
 
   useEffect(() => {
-    document.body.classList.add("home-no-scroll");
+    const onResize = () => setIsMobileLayout(detectMobileLayout());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle("home-no-scroll", !isMobileLayout);
 
     return () => {
       document.body.classList.remove("home-no-scroll");
     };
-  }, []);
+  }, [isMobileLayout]);
 
   useEffect(() => {
     let active = true;
@@ -219,7 +227,18 @@ export function HomeScreen({ user, onLogout }: HomeScreenProps) {
   };
 
   return (
-    <main className="home-screen">
+    <main className={`home-screen${isMobileLayout ? " mobile-layout" : ""}`}>
+      {isMobileLayout ? (
+        <header className="mobile-top-bar">
+          <img className="mobile-top-logo" src="/assets/capify-logo.png" alt="Capify" />
+          <UserMenuButtonWeb
+            user={displayUser}
+            onOpenSettings={() => setIsSettingsOpen(true)}
+            onLogout={onLogout}
+          />
+        </header>
+      ) : null}
+
       <LayoutGroup id="invest-capital-layout">
         <section className="capital-cards">
           <article
@@ -247,13 +266,17 @@ export function HomeScreen({ user, onLogout }: HomeScreenProps) {
               tabIndex={0}
               onClick={() => {
                 setSelectedCapitalFilter("CAPITAL_INVERTIDO");
-                setIsInvestPanelOpen(true);
+                if (!isMobileLayout) {
+                  setIsInvestPanelOpen(true);
+                }
               }}
               onKeyDown={(event) => {
                 if (event.key === "Enter" || event.key === " ") {
                   event.preventDefault();
                   setSelectedCapitalFilter("CAPITAL_INVERTIDO");
-                  setIsInvestPanelOpen(true);
+                  if (!isMobileLayout) {
+                    setIsInvestPanelOpen(true);
+                  }
                 }
               }}
             >
@@ -350,9 +373,11 @@ export function HomeScreen({ user, onLogout }: HomeScreenProps) {
         />
       </div>
 
-      <div className="user-card-anchor">
-        <UserCard user={displayUser} onLogout={onLogout} onOpenSettings={() => setIsSettingsOpen(true)} />
-      </div>
+      {!isMobileLayout ? (
+        <div className="user-card-anchor">
+          <UserCard user={displayUser} onLogout={onLogout} onOpenSettings={() => setIsSettingsOpen(true)} />
+        </div>
+      ) : null}
 
       {isSettingsOpen ? (
         <SettingsPanel
@@ -432,6 +457,14 @@ export function HomeScreen({ user, onLogout }: HomeScreenProps) {
       ) : null}
     </main>
   );
+}
+
+function detectMobileLayout(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+  const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  return window.innerWidth <= 900 || (coarsePointer && window.innerWidth <= 1024);
 }
 
 function shouldIncludeExpenseInFilter(
