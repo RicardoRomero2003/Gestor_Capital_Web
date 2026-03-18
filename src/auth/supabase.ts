@@ -26,7 +26,7 @@ export function getSupabaseClient(): SupabaseClient {
   cachedClient = createClient(config.url, config.anonKey, {
     auth: {
       autoRefreshToken: true,
-      persistSession: true,
+      persistSession: false,
       detectSessionInUrl: true,
     },
   });

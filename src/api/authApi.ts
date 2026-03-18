@@ -2,25 +2,77 @@ import type { ApiSessionUser } from "../auth/types";
 import { getSupabaseClient } from "../auth/supabase";
 import { apiFetch } from "./client";
 
+const SYNTHETIC_AUTH_DOMAIN = "users.capify.local";
+
 function parseSignInErrorMessage(message: string): string {
   const normalized = message.trim().toLowerCase();
   if (normalized.includes("invalid login credentials")) return "Credenciales invalidas.";
   if (normalized.includes("email not confirmed")) return "Confirma tu correo en Supabase para iniciar sesion.";
+  if (normalized.includes("email address") && normalized.includes("invalid")) {
+    return "Usuario invalido. Usa letras, numeros, punto, guion o guion bajo.";
+  }
   return message;
 }
 
-function shouldTryForcedSignUp(errorMessage: string): boolean {
-  const normalized = errorMessage.toLowerCase();
-  return normalized.includes("invalid login credentials") || normalized.includes("user not found");
-}
-
-function normalizeLoginEmail(rawEmail: string): string {
-  return rawEmail
+function normalizeIdentifier(rawIdentifier: string): string {
+  return rawIdentifier
     .normalize("NFKC")
     .replace(/["'\u201c\u201d\u2018\u2019]/g, "")
-    .replace(/\s+/g, "")
+    .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
+}
+
+function isEmail(identifier: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
+}
+
+function buildLocalPart(identifier: string): string {
+  const transliterated = identifier
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+  const cleaned = transliterated
+    .replace(/[^a-z0-9._-]+/g, ".")
+    .replace(/[.]{2,}/g, ".")
+    .replace(/^[-._]+|[-._]+$/g, "");
+
+  return cleaned.slice(0, 50);
+}
+
+function resolveSupabaseEmail(identifier: string): string {
+  if (isEmail(identifier)) return identifier;
+
+  const localPart = buildLocalPart(identifier);
+  if (!localPart) {
+    throw new Error("Usuario invalido. Introduce al menos una letra o numero.");
+  }
+
+  return `${localPart}@${SYNTHETIC_AUTH_DOMAIN}`;
+}
+
+function resolveProfileUsername(identifier: string): string {
+  if (!identifier) return "usuario";
+  if (isEmail(identifier)) {
+    const alias = identifier.split("@")[0]?.trim() ?? "usuario";
+    return alias.slice(0, 45);
+  }
+  return identifier.slice(0, 45);
+}
+
+async function parseApiError(response: Response): Promise<string> {
+  const bodyText = await response.text().catch(() => "");
+  if (bodyText) {
+    try {
+      const payload = JSON.parse(bodyText) as { detail?: string; message?: string };
+      if (payload?.detail) return payload.detail;
+      if (payload?.message) return payload.message;
+    } catch {
+      return bodyText;
+    }
+  }
+  return `Error ${response.status}`;
 }
 
 async function getApiSessionUser(accessToken?: string): Promise<ApiSessionUser> {
@@ -42,41 +94,22 @@ async function getApiSessionUser(accessToken?: string): Promise<ApiSessionUser> 
   return (await response.json()) as ApiSessionUser;
 }
 
-export async function loginWithSupabase(correo: string, password: string): Promise<ApiSessionUser> {
-  const email = normalizeLoginEmail(correo);
+export async function loginWithSupabase(usuario: string, password: string): Promise<ApiSessionUser> {
+  const identifier = normalizeIdentifier(usuario);
+  if (!identifier) {
+    throw new Error("Introduce un usuario valido.");
+  }
+  const email = resolveSupabaseEmail(identifier);
   const plainPassword = password;
   const client = getSupabaseClient();
 
-  let signInRes = await client.auth.signInWithPassword({
+  const signInRes = await client.auth.signInWithPassword({
     email,
     password: plainPassword,
   });
 
   if (signInRes.error) {
-    const originalMessage = parseSignInErrorMessage(signInRes.error.message);
-
-    if (!shouldTryForcedSignUp(signInRes.error.message)) {
-      throw new Error(originalMessage);
-    }
-
-    const signUpRes = await client.auth.signUp({
-      email,
-      password: plainPassword,
-      options: {
-        data: {
-          username: (email.split("@")[0] ?? "usuario").slice(0, 45),
-        },
-      },
-    });
-
-    if (signUpRes.error && !signUpRes.error.message.toLowerCase().includes("already registered")) {
-      throw new Error(parseSignInErrorMessage(signUpRes.error.message));
-    }
-
-    signInRes = await client.auth.signInWithPassword({ email, password: plainPassword });
-    if (signInRes.error) {
-      throw new Error(parseSignInErrorMessage(signInRes.error.message));
-    }
+    throw new Error(parseSignInErrorMessage(signInRes.error.message));
   }
 
   const accessToken = signInRes.data.session?.access_token;
@@ -85,6 +118,28 @@ export async function loginWithSupabase(correo: string, password: string): Promi
   }
 
   return getApiSessionUser(accessToken);
+}
+
+export async function registerWithSupabase(usuario: string, password: string): Promise<void> {
+  const identifier = normalizeIdentifier(usuario);
+  if (!identifier) {
+    throw new Error("Introduce un usuario valido.");
+  }
+
+  const response = await apiFetch("/registro", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      usuario: identifier,
+      password,
+      correo: resolveSupabaseEmail(identifier),
+      username: resolveProfileUsername(identifier),
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(await parseApiError(response));
+  }
 }
 
 export async function getCurrentSessionUser(): Promise<ApiSessionUser | null> {

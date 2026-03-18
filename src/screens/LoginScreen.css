@@ -55,7 +55,7 @@ body {
 
 .login-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 14px;
   align-items: flex-start;
   margin-bottom: 18px;
@@ -75,16 +75,6 @@ body {
   font-size: clamp(1.45rem, 3.3vw, 1.9rem);
 }
 
-.mode-toggle {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--text);
-  padding: 8px 12px;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-
 .login-form {
   display: grid;
   gap: 10px;
@@ -95,7 +85,7 @@ body {
   font-weight: 600;
 }
 
-.login-form input[type="email"],
+.login-form input[type="text"],
 .login-form input[type="password"] {
   width: 100%;
   border: 1px solid var(--line);
@@ -107,9 +97,9 @@ body {
 }
 
 .login-form input:focus-visible,
-.mode-toggle:focus-visible,
+.register-floating-button:focus-visible,
 .login-button:focus-visible,
-.text-button:focus-visible {
+.remember input:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: 2px;
 }
@@ -126,15 +116,6 @@ body {
   align-items: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 0.88rem;
-}
-
-.text-button {
-  border: none;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  padding: 0;
   font-size: 0.88rem;
 }
 
@@ -175,14 +156,33 @@ body {
   color: #ffb0b0;
 }
 
+.register-floating-button {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 15;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 10px 14px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px #00000033;
+}
+
 @media (max-width: 520px) {
   .login-shell {
     padding: 18px;
   }
 
   .login-actions {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  .register-floating-button {
+    left: 12px;
+    bottom: 12px;
   }
 }

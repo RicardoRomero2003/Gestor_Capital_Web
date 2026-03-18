@@ -1,30 +1,53 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { loginWithSupabase } from "../api/authApi";
 import { getInitialTheme } from "../auth/theme";
 import type { AuthenticatedUser, StatusKind, Theme } from "../auth/types";
-import { ThemeToggle } from "../components/ThemeToggle";
+import { RegisterModal } from "../components/RegisterModal";
 import "./LoginScreen.css";
 
 type LoginScreenProps = {
   onLoginSuccess: (user: AuthenticatedUser) => void;
 };
 
+const LOGIN_HINT_KEY = "capify_login_hint";
+
+type LoginHint = {
+  usuario: string;
+  password: string;
+  remember: boolean;
+};
+
 export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
-  const [correo, setCorreo] = useState("");
+  const [theme] = useState<Theme>(getInitialTheme);
+  const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(true);
+  const [remember, setRemember] = useState(false);
   const [status, setStatus] = useState("");
   const [statusKind, setStatusKind] = useState<StatusKind>("idle");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(LOGIN_HINT_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as LoginHint;
+      if (!parsed.remember) return;
+      setUsuario(parsed.usuario ?? "");
+      setPassword(parsed.password ?? "");
+      setRemember(true);
+    } catch {
+      // Si el formato del storage es invalido, se ignora en silencio.
+    }
+  }, []);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!correo || !password) {
+    if (!usuario || !password) {
       setStatusKind("error");
-      setStatus("Completa correo y contrasena para continuar.");
+      setStatus("Completa usuario y contrasena para continuar.");
       return;
     }
 
@@ -33,8 +56,8 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
       setStatusKind("idle");
       setStatus("");
 
-      const sessionUser = await loginWithSupabase(correo, password);
-      const nombre = sessionUser.usuario || getDisplayNameFromCorreo(sessionUser.correo);
+      const sessionUser = await loginWithSupabase(usuario, password);
+      const nombre = sessionUser.usuario || getDisplayNameFromIdentifier(usuario);
       onLoginSuccess({
         userId: sessionUser.user_id,
         uid: sessionUser.uid,
@@ -42,8 +65,15 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
         nombre,
       });
 
+      if (remember) {
+        const hint: LoginHint = { usuario, password, remember: true };
+        window.localStorage.setItem(LOGIN_HINT_KEY, JSON.stringify(hint));
+      } else {
+        window.localStorage.removeItem(LOGIN_HINT_KEY);
+      }
+
       setStatusKind("success");
-      setStatus(remember ? "Login correcto. Sesion recordada." : "Login correcto.");
+      setStatus("Login correcto.");
       setPassword("");
     } catch (error) {
       setStatusKind("error");
@@ -66,18 +96,17 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
             <p className="eyebrow">Gestor de Capital</p>
             <h1>Iniciar sesion</h1>
           </div>
-          <ThemeToggle theme={theme} onToggle={() => setTheme((prev) => (prev === "light" ? "dark" : "light"))} />
         </header>
 
         <form className="login-form" onSubmit={onSubmit}>
-          <label htmlFor="correo">Correo</label>
+          <label htmlFor="usuario">Usuario</label>
           <input
-            id="correo"
-            type="email"
-            autoComplete="email"
-            placeholder="tu@email.com"
-            value={correo}
-            onChange={(event) => setCorreo(event.target.value)}
+            id="usuario"
+            type="text"
+            autoComplete="username"
+            placeholder="Tu usuario"
+            value={usuario}
+            onChange={(event) => setUsuario(event.target.value)}
           />
 
           <label htmlFor="password">Contrasena</label>
@@ -99,9 +128,6 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               />
               Recordarme
             </label>
-            <button type="button" className="text-button">
-              Olvide mi contrasena
-            </button>
           </div>
 
           <motion.button
@@ -117,12 +143,33 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
           <p className={`status-text ${statusKind}`}>{status}</p>
         </form>
       </motion.section>
+
+      <button
+        type="button"
+        className="register-floating-button"
+        onClick={() => setIsRegisterOpen(true)}
+      >
+        Registrarme
+      </button>
+
+      {isRegisterOpen ? (
+        <RegisterModal
+          onClose={() => setIsRegisterOpen(false)}
+          onRegistered={(registeredUser) => {
+            setUsuario(registeredUser);
+            setPassword("");
+            setStatusKind("success");
+            setStatus("Registro completado. Inicia sesion con tu nuevo usuario.");
+            setIsRegisterOpen(false);
+          }}
+        />
+      ) : null}
     </main>
   );
 }
 
-function getDisplayNameFromCorreo(correo: string): string {
-  const raw = correo.split("@")[0] ?? correo;
+function getDisplayNameFromIdentifier(identifier: string): string {
+  const raw = identifier.split("@")[0] ?? identifier;
   if (!raw.trim()) {
     return "Usuario";
   }
